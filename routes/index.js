@@ -8,15 +8,6 @@ router.get('/',(req,res,next) => {
     res.render('main')
 })
 
-router.post('/register', (req,res)=> {
-    res.send('success')
-    const post=req.body
-    User.create({
-        name:post.username,
-        email:post.email,
-        password:post.password
-    })
-})
 router.get('/register', (req,res)=> {
     res.render('register')
 })

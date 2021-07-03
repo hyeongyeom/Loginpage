@@ -5,26 +5,23 @@ const dotenv=require('dotenv')
 const pageRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
 const path=require('path')
+const session = require('express-session');
 const app = express();
 const passport = require('passport')
-const passportConfig =require('./passport')
 const {sequelize}=require('./models')
+const FileStore=require('session-file-store')(session)
+const passportConfig =require('./passport')
+
 
 
 
 dotenv.config();
+passportConfig();
 
 
 app.set('port',process.env.PORT || 80)
 app.set("views", "./views")
 app.set('view engine', 'ejs');
-app.use(morgan('dev'))
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(passport.initialize())
-app.use(passport.session())
-passportConfig();
 
 sequelize.sync({force:false})
 .then(()=> {
@@ -33,6 +30,26 @@ sequelize.sync({force:false})
 .catch((err)=> {
     console.error(err)
 })
+app.use(morgan('dev'))
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
+app.use(cookieParser())
+app.use(express.urlencoded({ extended: false }));
+app.use(session({
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.COOKIE_SECRET,
+    store:new FileStore(),
+    cookie: {
+      httpOnly: true,
+      secure: false,
+    },
+  }));
+
+
+
+app.use(passport.initialize())
+app.use(passport.session())
 app.use('/',pageRouter)
 app.use('/auth',authRouter)
 

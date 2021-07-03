@@ -5,11 +5,12 @@ const { User } = require('../models');
 
 module.exports = () => {
     passport.serializeUser((user, done) => {
-      console.log(user)
-    done(null, user.id);
+      console.log('serializse' , user.email)
+    done(null, user.email);
   });
 
-//   passport.deserializeUser((id, done) => {
+  passport.deserializeUser((id, done) => {
+  done(null, id);
 //     User.findOne({
 //       where: { id },
 //       include: [{
@@ -24,7 +25,7 @@ module.exports = () => {
 //     })
 //       .then(user => done(null, user))
 //       .catch(err => done(err));
-//   });
+  });
 
   local();
 //   kakao();

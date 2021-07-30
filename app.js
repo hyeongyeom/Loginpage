@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const dotenv=require('dotenv')
 const pageRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
+const postRouter = require('./routes/post');
 const path=require('path')
 const session = require('express-session');
 const app = express();
@@ -52,6 +53,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 app.use('/',pageRouter)
 app.use('/auth',authRouter)
+// app.use('/post',postRouter)
 
 
 app.use((req,res,next) => {
